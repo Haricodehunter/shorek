@@ -1,0 +1,95 @@
+$font-size-base:          14px !default;
+$font-size-large:         ceil(($font-size-base * 1.25)) !default; // ~18px
+$font-size-small:         ceil(($font-size-base * 0.85)) !default; // ~12px
+
+$font-size-h1:            floor(($font-size-base * 2.6)) !default; // ~36px
+$font-size-h2:            floor(($font-size-base * 2.15)) !default; // ~30px
+$font-size-h3:            ceil(($font-size-base * 1.7)) !default; // ~24px
+$font-size-h4:            ceil(($font-size-base * 1.25)) !default; // ~18px
+$font-size-h5:            $font-size-base !default;
+$font-size-h6:            ceil(($font-size-base * 0.85)) !default; // ~12px
+
+
+@font-face {
+  font-family: 'HelveticaNeueBold';
+  src:  url('../fonts/HelveticaNeue-Bold.woff') format('woff'), url('../fonts/HelveticaNeue-Bold.ttf')  format('truetype'), url('../fonts/HelveticaNeue-Bold.svg#HelveticaNeueBold') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+$bgcolor: #1a1a1a;
+$black:#000;
+$white: #fff;
+$voilet: #00a19a;
+$modalbg: #262626;
+$orange:#c69e73;
+$gold:#b9966b;
+$font-family:'Roboto', sans-serif;
+$font-bold:'HelveticaNeueBold', sans-serif;
+$icon-color: #fff;
+$distance: 40px;
+$angle:90deg/4;
+$pi: 3.14159265359;
+$_precision: 10;
+$items: 10;
+$radius: 180px;
+$mangle: 90deg / $items;
+$innerbg: #191b1c;
+
+
+@function pow($base, $exp) {
+  $value: $base;
+  @if $exp > 1 {
+    @for $i from 2 through $exp {
+      $value: $value * $base;
+    }
+  }
+  @if $exp < 1{
+    @for $i from 0 through -$exp {
+      $value: $value / $base;
+    }
+  }
+  @return $value;
+}
+
+@function fact($num) {
+  $fact: 1;
+  @if $num > 0{
+    @for $i from 1 through $num {
+      $fact: $fact * $i;
+    }
+  }
+  @return $fact;
+}
+
+@function _to_unitless_rad($angle) {
+  @if unit($angle) == "deg" {
+    $angle: $angle / 180deg * $pi;
+  }
+  @if unit($angle) == "rad" {
+    $angle: $angle / 1rad;
+  }
+  @return $angle;
+}
+
+@function sin($angle){
+  $a: _to_unitless_rad($angle);
+  $sin: $a;
+  @for $n from 1 through $_precision {
+    $sin: $sin + (pow(-1, $n) / fact(2 * $n + 1) ) * pow($a, (2 * $n + 1));
+  }
+  @return $sin;
+}
+
+@function cos($angle){
+  $a: _to_unitless_rad($angle);
+  $cos: 1;
+  @for $n from 1 through $_precision {
+    $cos: $cos + ( pow(-1,$n) / fact(2*$n) ) * pow($a,2*$n);
+  }
+  @return $cos;
+}
+
+@function tan($angle){
+  @return sin($angle) / cos($angle);
+}
